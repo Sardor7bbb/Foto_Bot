@@ -1,8 +1,16 @@
 
-from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from main.config import TOKEN
+import filters, middlewarse, handlers
+from load import dp, db
+from aiogram import executor, Dispatcher
 
-bot = Bot(token=TOKEN)
-storage = MemoryStorage()
-dp = Dispatcher(bot, storage=storage)
+
+async def on_startup(dispatcher):
+    #db.create_table()
+    pass
+
+async def on_shutdown(dispatcher):
+    db.connect.close()
+
+
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)
