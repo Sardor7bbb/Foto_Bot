@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
+from keyboards.default.defoult import button
 from load import dp, db
 from status.users import RegisterState
 
@@ -9,7 +10,7 @@ from status.users import RegisterState
 async def start(message: types.Message):
     if db.get_user_chat_id(chat_id=message.chat.id):
         text = "Assalomu Alekum 👋"
-        await message.answer(text=text)
+        await message.answer(text=text, reply_markup=button)
     else:
         text = "Assalomu Alekum ismingizni kiriting 📝 "
         await message.answer(text=text)
@@ -36,8 +37,10 @@ async def get_phone_number(message: types.Message, state: FSMContext):
 async def get_location(message: types.Message, state: FSMContext):
     await state.update_data(location_name=message.text)
     data = await state.get_data()
+    print(data)
     if db.add_user_chat(data):
         text = "Saccsessfully register ✅"
+        await message.answer(text=text, reply_markup=button)
     else:
         text = "Bot problems 🛠"
     await message.answer(text=text)
