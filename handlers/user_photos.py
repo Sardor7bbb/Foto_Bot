@@ -1,14 +1,14 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-
+import random
 from load import dp, db
 
 
 @dp.message_handler(text="Rasim Joylash")
 async def get_photos(message: types.Message, state: FSMContext):
-    photo = db.get_photo_id(chat_id=message.chat.id)
+    photo = db.get_foto_id(chat_id=message.chat.id)
     if photo:
-        await message.answer_photo(photo=photo[0][2])
+        await message.answer_photo(photo=photo[2])
         text = "Rasim mavjud"
     else:
         text = "Iltimos yoqtirgan rasmingizni yuboring: "
@@ -25,4 +25,4 @@ async def get_photos(message: types.Message, state: FSMContext):
     else:
         text = "Rasim qoshilmadi "
     await message.answer(text=text)
-    await state.set_state("update_user_photos")
+    await state.finish()

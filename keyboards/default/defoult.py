@@ -8,7 +8,14 @@ button = ReplyKeyboardMarkup(
             KeyboardButton(text="Rasim Joylash"),
         ],
         [
+            KeyboardButton(text="Search 🔍"),
+            KeyboardButton(text="Admin "),
+        ],
+        [
             KeyboardButton(text="Menyu")
+        ],
+        [
+            KeyboardButton(text="Setting ⚙️")
         ]
     ], resize_keyboard=True
 )

@@ -1,6 +1,6 @@
 import psycopg2 as db
 from main.config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
-
+import random
 class Database:
 
     def __init__(self):
@@ -32,8 +32,8 @@ class Database:
         like = """
         CREATE TABLE IF NOT EXISTS likes (
         id SERIAL PRIMARY KEY,
-        user_id INT REFERENCES users(id),
-        photo INT REFERENCES photos(id),
+        chat_id BIGINT,
+        photo_id INT REFERENCES photos(id),
         is_like BOOLEAN DEFAULT false)"""
 
         self.cursor.execute(user_table)
@@ -48,11 +48,27 @@ class Database:
         result = self.cursor.fetchall()
         return result
 
-    def get_photo_id(self, chat_id):
-        query = f"SELECT * FROM photos WHERE chat_id = {chat_id} AND status = true"
+    def get_random_foto_id(self, chat_id):
+        query = f"SELECT * FROM photos WHERE status = true"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
+        random_photo = random.choice(result)
+        return random_photo
+
+    def get_foto_id(self, chat_id):
+        query = f"SELECT * FROM photos WHERE chat_id = {chat_id} AND status = true"
+        self.cursor.execute(query)
+        result = self.cursor.fetchone()
         return result
+
+    def get_foto_likes(self, photo_id):
+        query_like = f"SELECT COUNT(*) FROM likes WHERE photo_id = {photo_id} AND is_like = true"
+        query_dislike = f"SELECT COUNT(*) FROM likes WHERE photo_id = {photo_id} AND is_like = false"
+        self.cursor.execute(query_like)
+        likes = self.cursor.fetchall()
+        self.cursor.execute(query_dislike)
+        dislike = self.cursor.fetchone()
+        return likes, dislike
 
     def add_user_chat(self, data: dict):
         chat_id = data["chat_id"]
@@ -71,3 +87,21 @@ class Database:
         self.cursor.execute(query)
         self.connect.commit()
         return True
+
+    def user_likes(self, chat_id, photo_id, is_like):
+        query = f"""INSERT INTO likes (chat_id, photo_id, is_like) VALUES ({chat_id}, {photo_id},'{is_like}')"""
+        self.cursor.execute(query)
+        self.connect.commit()
+        return True
+
+    def check_user_like(self, chat_id, photo_id):
+        query = f"""SELECT * FROM likes WHERE chat_id = '{chat_id}' AND photo_id = {photo_id}"""
+        self.cursor.execute(query)
+        result = self.cursor.fetchone()
+        return result
+
+    def get_username(self, full_name):
+        query = f"SELECT * FROM users WHERE full_name = '{full_name}'"
+        self.cursor.execute(query)
+        result = self.cursor.fetchall()
+        return result

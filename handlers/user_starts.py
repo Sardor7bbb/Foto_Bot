@@ -43,5 +43,5 @@ async def get_location(message: types.Message, state: FSMContext):
         await message.answer(text=text, reply_markup=button)
     else:
         text = "Bot problems 🛠"
-    await message.answer(text=text)
+        await message.answer(text=text)
     await state.finish()
