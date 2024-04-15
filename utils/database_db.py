@@ -1,8 +1,9 @@
 import psycopg2 as db
 from main.config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
 import random
-class Database:
 
+
+class Database:
     def __init__(self):
         self.connect = db.connect(
             database=DB_NAME,
@@ -53,7 +54,13 @@ class Database:
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         random_photo = random.choice(result)
-        return random_photo
+        if self.check_user_like(chat_id, random_photo[0]):
+            try:
+                self.get_random_foto_id(chat_id)
+            except Exception as e:
+                return False
+        else:
+            return random_photo
 
     def get_foto_id(self, chat_id):
         query = f"SELECT * FROM photos WHERE chat_id = {chat_id} AND status = true"
@@ -105,3 +112,9 @@ class Database:
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         return result
+
+    def user_delete_like(self, chat_id, photo_id):
+        query = f"""DELETE FROM likes WHERE chat_id = {chat_id} AND photo_id = {photo_id}"""
+        self.cursor.execute(query)
+        self.connect.commit()
+        return True

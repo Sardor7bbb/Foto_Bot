@@ -17,16 +17,19 @@ async def user_search(message: types.Message, state: FSMContext):
 @dp.message_handler(state="user_search")
 async def get_user_search(message: types.Message, state: FSMContext):
     user = db.get_username(full_name=message.text)
+    print(user)
     if user:
+        print(user)
         text = f"{user[0][2]} topildi"
-        await message.answer(text=text, reply_markup=await follow_button_def(chat_id=user[0][1]))
+        await message.answer(text=text, reply_markup=await follow_button_def(chat_id=print(user[0][1])))
     else:
         text = "User not found"
         await message.answer(text=text)
     await state.finish()
 
+
 @dp.callback_query_handler()
-async def user_follow_button(call: types.CallbackQuery, state: FSMContext):
+async def user_follow_button(call: types.CallbackQuery):
     user_chat_id = call.data
     chat_id = call.message.chat.id
     print(user_chat_id)

@@ -4,6 +4,7 @@ from keyboards.inline.like_dislike import like_dislike_def
 from load import dp, db
 from aiogram import types
 
+
 @dp.message_handler(text="Rasimlar")
 async def get_random_foto(message: types.Message, state: FSMContext):
     data = await state.get_data()

@@ -21,8 +21,7 @@ async def follow_button_def(chat_id):
     follow_button = InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text=f"Follow ", callback_data=chat_id),
-
+                InlineKeyboardButton(text=f"Follow ", callback_data=chat_id)
             ]
         ]
     )

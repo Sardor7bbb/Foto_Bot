@@ -8,7 +8,13 @@ from aiogram import types
 @dp.callback_query_handler(text=user_like_data.filter(action='like'))
 async def like_dislike_handler(call: types.CallbackQuery, callback_data: dict):
     photo_id = callback_data.get('photo_id')
-    db.user_likes(chat_id=call.message.chat.id, photo_id=photo_id, is_like=True)
+    is_like = db.check_user_like(chat_id=call.message.chat.id, photo_id=int(photo_id))
+    if is_like:
+        db.user_delete_like(chat_id=call.message.chat.id, photo_id=int(photo_id))
+        if is_like[3] is False:
+            db.user_like(chat_id=call.message.chat.id, photo_id=photo_id, is_like=True)
+    else:
+        db.user_like(chat_id=call.message.chat.id, photo_id=photo_id, is_like=True)
     likes, dislikes = db.get_foto_likes(photo_id)
     likes = likes[0][0]
     dislikes = dislikes[0]
@@ -18,7 +24,14 @@ async def like_dislike_handler(call: types.CallbackQuery, callback_data: dict):
 @dp.callback_query_handler(text=user_dislike_data.filter(action='dislike'))
 async def dislike_handler(call: types.CallbackQuery, callback_data: dict):
     photo_id = callback_data.get('photo_id')
-    db.user_likes(chat_id=call.message.chat.id, photo_id=photo_id, is_like=False)
+    is_like = db.check_user_like(chat_id=call.message.chat.id, photo_id=int(photo_id))
+    if is_like:
+        db.user_delete_like(chat_id=call.message.chat.id, photo_id=int(photo_id))
+        if is_like[3] is True:
+            db.user_like(chat_id=call.message.chat.id, photo_id=photo_id, is_like=False)
+
+    else:
+        db.user_like(chat_id=call.message.chat.id, photo_id=photo_id, is_like=False)
     likes, dislikes = db.get_foto_likes(photo_id)
     likes = likes[0][0]
     dislikes = dislikes[0]
