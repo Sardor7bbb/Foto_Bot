@@ -9,8 +9,10 @@ async def like_dislike_def(like, dislike, photo_id):
     like_button = InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text=f"{like} 👍", callback_data=user_like_data.new(action="like", photo_id=photo_id)),
-                InlineKeyboardButton(text=f"{dislike} 👎", callback_data=user_dislike_data.new(action="dislike", photo_id=photo_id))
+                InlineKeyboardButton(text=f"{like} 👍",
+                                     callback_data=user_like_data.new(action="like", photo_id=photo_id)),
+                InlineKeyboardButton(text=f"{dislike} 👎",
+                                     callback_data=user_dislike_data.new(action="dislike", photo_id=photo_id))
             ]
         ]
     )
@@ -21,7 +23,7 @@ async def follow_button_def(chat_id):
     follow_button = InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text=f"Follow ", callback_data=chat_id)
+                InlineKeyboardButton(text=f"Follow ", callback_data=str(chat_id))
             ]
         ]
     )
